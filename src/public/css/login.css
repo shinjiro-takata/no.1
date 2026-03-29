@@ -1,0 +1,82 @@
+.login {
+	min-height: calc(100vh - 96px);
+	background-color: #f2efec;
+	padding: 46px 20px 80px;
+}
+
+.login__heading {
+	text-align: center;
+	margin-bottom: 32px;
+	color: #8b7969;
+	font-family: "AppleMyungjo", sans-serif;
+	font-size: 24px;
+}
+
+.login__card {
+	max-width: 760px;
+	margin: 0 auto;
+	background-color: #fff;
+	border: 1px solid #d8d1ca;
+	border-radius: 6px;
+	padding: 78px 116px 58px;
+}
+
+.login-form {
+	max-width: 430px;
+	margin: 0 auto;
+}
+
+.login-form__group {
+	margin-bottom: 34px;
+}
+
+.login-form__label {
+	display: block;
+	margin-bottom: 14px;
+	color: #8b7969;
+	font-size: 34px;
+	font-weight: 500;
+}
+
+.login-form__input {
+	width: 100%;
+	height: 54px;
+	border: 1px solid #ece8e4;
+	background-color: #f5f3f2;
+	padding: 0 18px;
+	color: #8b7969;
+	font-size: 18px;
+}
+
+.login-form__input::placeholder {
+	color: #c1b9b3;
+}
+
+.login-form__actions {
+	margin-top: 14px;
+	text-align: center;
+}
+
+.login-form__button {
+	min-width: 150px;
+	height: 46px;
+	border: 0;
+	background-color: #8b7969;
+	color: #fff;
+	font-size: 22px;
+	cursor: pointer;
+}
+
+@media (max-width: 768px) {
+	.login {
+		padding: 28px 14px 52px;
+	}
+
+	.login__card {
+		padding: 34px 20px 38px;
+	}
+
+	.login-form__label {
+		font-size: 24px;
+	}
+}
