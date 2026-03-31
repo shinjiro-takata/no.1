@@ -30,6 +30,12 @@
 	margin-bottom: 34px;
 }
 
+.login-form__error {
+	margin-top: 8px;
+	color: #ff6b6b;
+	font-size: 14px;
+}
+
 .login-form__label {
 	display: block;
 	margin-bottom: 14px;

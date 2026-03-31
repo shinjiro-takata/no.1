@@ -6,6 +6,7 @@ use App\Models\Contact;
 use App\Models\Category;
 use App\Http\Requests\ContactRequest;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ContactController extends Controller
 {
@@ -40,6 +41,61 @@ class ContactController extends Controller
         $contacts = $query->paginate(7)->appends($request->query());
 
         return view('admin', compact('contacts', 'categories'));
+    }
+
+    // 検索
+    public function search(Request $request)
+    {
+        return $this->admin($request);
+    }
+
+    // 検索リセット
+    public function reset()
+    {
+        return redirect()->route('contact.admin');
+    }
+
+    // 削除
+    public function delete(Contact $contact)
+    {
+        $contact->delete();
+        return redirect()->route('contact.admin');
+    }
+
+    // エクスポート
+    public function export(): StreamedResponse
+    {
+        $contacts = Contact::with('category')->latest('id')->get();
+
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="contacts.csv"',
+        ];
+
+        $callback = function () use ($contacts) {
+            $stream = fopen('php://output', 'w');
+            // BOM (Excel対策)
+            fwrite($stream, "\xEF\xBB\xBF");
+            // ヘッダー行
+            fputcsv($stream, ['お名前', '性別', 'メールアドレス', 'お問い合わせの種類', 'お問い合わせ内容', '登録日時']);
+
+            $genderMap = [1 => '男性', 2 => '女性', 3 => 'その他'];
+
+            foreach ($contacts as $contact) {
+                fputcsv($stream, [
+                    $contact->last_name . ' ' . $contact->first_name,
+                    $genderMap[$contact->gender] ?? '',
+                    $contact->email,
+                    optional($contact->category)->content,
+                    $contact->detail,
+                    $contact->created_at,
+                ]);
+            }
+
+            fclose($stream);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     // 入力ページ

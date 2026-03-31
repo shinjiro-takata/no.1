@@ -5,7 +5,10 @@
 @endsection
 
 @section('header_action')
-<a class="header__action-link" href="{{ route('logout') }}">logout</a>
+<form class="header__logout-form" action="{{ route('logout') }}" method="post">
+    @csrf
+    <button class="header__action-link" type="submit">logout</button>
+</form>
 @endsection
 
 @section('content')
@@ -15,7 +18,7 @@
     </div>
 
     <div class="admin__content">
-        <form class="search-form" action="{{ route('contact.admin') }}" method="get">
+        <form class="search-form" action="{{ route('contact.search') }}" method="get">
             <input class="search-form__input search-form__input--keyword" type="text" name="keyword" placeholder="名前やメールアドレスを入力してください" value="{{ request('keyword') }}">
 
             <select class="search-form__input search-form__input--select" name="gender">
@@ -35,11 +38,13 @@
             <input class="search-form__input search-form__input--date" type="date" name="created_date" value="{{ request('created_date') }}">
 
             <button class="search-form__button search-form__button--search" type="submit">検索</button>
-            <a class="search-form__button search-form__button--reset" href="{{ route('contact.admin') }}">リセット</a>
+            <a class="search-form__button search-form__button--reset" href="{{ route('contact.reset') }}">リセット</a>
         </form>
 
         <div class="admin__toolbar">
-            <button class="admin__export-button" type="button">エクスポート</button>
+            <form action="{{ route('contact.export') }}" method="get">
+                <button class="admin__export-button" type="submit">エクスポート</button>
+            </form>
 
             @if ($contacts->hasPages())
             <div class="pagination">

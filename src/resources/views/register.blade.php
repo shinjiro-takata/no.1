@@ -15,21 +15,36 @@
     </div>
 
     <div class="register__card">
-        <form class="register-form" action="#" method="post">
+        <form class="register-form" action="{{ route('register') }}" method="post" novalidate>
             @csrf
             <div class="register-form__group">
                 <label class="register-form__label" for="name">お名前</label>
-                <input class="register-form__input" id="name" type="text" name="name" placeholder="例: 山田 太郎" />
+                <input class="register-form__input" id="name" type="text" name="name" placeholder="例: 山田 太郎" value="{{ old('name') }}" />
+                <div class="register-form__error">
+                    @error('name')
+                    {{ $message }}
+                    @enderror
+                </div>
             </div>
 
             <div class="register-form__group">
                 <label class="register-form__label" for="email">メールアドレス</label>
-                <input class="register-form__input" id="email" type="email" name="email" placeholder="例: test@example.com" />
+                <input class="register-form__input" id="email" type="email" name="email" placeholder="例: test@example.com" value="{{ old('email') }}" />
+                <div class="register-form__error">
+                    @error('email')
+                    {{ $message }}
+                    @enderror
+                </div>
             </div>
 
             <div class="register-form__group">
                 <label class="register-form__label" for="password">パスワード</label>
                 <input class="register-form__input" id="password" type="password" name="password" placeholder="例: coachtech1106" />
+                <div class="register-form__error">
+                    @error('password')
+                    {{ $message }}
+                    @enderror
+                </div>
             </div>
 
             <div class="register-form__actions">

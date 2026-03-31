@@ -45,9 +45,14 @@
     text-decoration: none;
     font-size: 14px;
     line-height: 1;
+    cursor: pointer;
 }
 
 .header__action-link:visited,
 .auth-header__action-link:visited {
     color: #d6c0b2;
+}
+
+.header__logout-form {
+    margin: 0;
 }

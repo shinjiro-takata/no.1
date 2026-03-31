@@ -14,11 +14,16 @@ use App\Http\Controllers\ContactController;
 |
 */
 
-Route::get('/', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/confirm', [ContactController::class, 'confirm'])->name('contact.confirm');
-Route::post('/thanks', [ContactController::class, 'store'])->name('contact.store');
-Route::get('/admin', [ContactController::class, 'admin'])->name('contact.admin');
+Route::controller(ContactController::class)->group(function () {
+    Route::get('/', 'index')->name('contact.index');
+    Route::post('/confirm', 'confirm')->name('contact.confirm');
+    Route::post('/thanks', 'store')->name('contact.store');
+});
 
-Route::view('/register', 'register')->name('register');
-Route::view('/login', 'login')->name('login');
-Route::view('/logout', 'logout')->name('logout');
+Route::middleware('auth')->controller(ContactController::class)->group(function () {
+    Route::get('/admin', 'admin')->name('contact.admin');
+    Route::get('/search', 'search')->name('contact.search');
+    Route::get('/reset', 'reset')->name('contact.reset');
+    Route::delete('/delete/{contact}', 'delete')->name('contact.delete');
+    Route::get('/export', 'export')->name('contact.export');
+});
