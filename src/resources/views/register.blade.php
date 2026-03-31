@@ -5,7 +5,7 @@
 @endsection
 
 @section('header_action')
-<a class="header__action-link" href="{{ route('login') }}">login</a>
+<a class="header__action-link auth-header__action-link" href="{{ route('login') }}">login</a>
 @endsection
 
 @section('content')

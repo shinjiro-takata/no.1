@@ -30,3 +30,24 @@
     top: 50%;
     transform: translateY(-50%);
 }
+
+.header__action-link,
+.auth-header__action-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 84px;
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid #e6dcd4;
+    background-color: #f7f2ee;
+    color: #d6c0b2;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.header__action-link:visited,
+.auth-header__action-link:visited {
+    color: #d6c0b2;
+}

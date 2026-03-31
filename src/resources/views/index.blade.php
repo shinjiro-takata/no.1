@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-
 <div class="contact-form__content">
     <div class="contact-form__heading">
         <h2>Contact</h2>
@@ -44,13 +43,22 @@
             <div class="form__group-content">
                 <div class="form__input--text">
                     <div class="form__input--text-gender">
-                        <input type="radio" name="gender" value="1" {{ old('gender') === '1' ? 'checked' : '' }} /> 男性
+                        <label>
+                            <input type="radio" name="gender" value="1" {{ old('gender') === '1' ? 'checked' : '' }} />
+                            男性
+                        </label>
                     </div>
                     <div class="form__input--text-gender">
-                        <input type="radio" name="gender" value="2" {{ old('gender') === '2' ? 'checked' : '' }} /> 女性
+                        <label>
+                            <input type="radio" name="gender" value="2" {{ old('gender') === '2' ? 'checked' : '' }} />
+                            女性
+                        </label>
                     </div>
                     <div class="form__input--text-gender">
-                        <input type="radio" name="gender" value="3" {{ old('gender') === '3' ? 'checked' : '' }} /> その他
+                        <label>
+                            <input type="radio" name="gender" value="3" {{ old('gender') === '3' ? 'checked' : '' }} />
+                            その他
+                        </label>
                     </div>
                 </div>
                 <div class="form__error">

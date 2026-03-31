@@ -9,6 +9,39 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
+    // 管理ページ
+    public function admin(Request $request)
+    {
+        $categories = Category::all();
+
+        $query = Contact::with('category')->latest('id');
+
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function ($q) use ($keyword) {
+                $q->where('first_name', 'like', "%{$keyword}%")
+                    ->orWhere('last_name', 'like', "%{$keyword}%")
+                    ->orWhere('email', 'like', "%{$keyword}%");
+            });
+        }
+
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->input('gender'));
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        if ($request->filled('created_date')) {
+            $query->whereDate('created_at', $request->input('created_date'));
+        }
+
+        $contacts = $query->paginate(7)->appends($request->query());
+
+        return view('admin', compact('contacts', 'categories'));
+    }
+
     // 入力ページ
     public function index()
     {

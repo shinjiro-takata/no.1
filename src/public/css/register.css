@@ -4,25 +4,6 @@
 	padding: 40px 20px 80px;
 }
 
-.header__action {
-	right: 14px;
-}
-
-.header__action-link {
-	min-width: 70px;
-	height: 22px;
-	padding: 0 8px;
-	border: 1px solid #e8ddd4;
-	background-color: transparent;
-	color: #d8c4b7;
-	font-size: 12px;
-	line-height: 1;
-}
-
-.header__action-link:visited {
-	color: #d8c4b7;
-}
-
 .register__heading {
 	text-align: center;
 	margin-bottom: 28px;

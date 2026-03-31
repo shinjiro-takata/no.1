@@ -75,7 +75,6 @@
 .form__error-last,
 .form__error-first {
     width: calc((100% - 16px) / 2);
-    white-space: nowrap;
     font-size: 12px;
     line-height: 1.2;
 }
@@ -88,7 +87,6 @@
 
 .form__error-tel {
     width: 28%;
-    white-space: nowrap;
     font-size: 12px;
     line-height: 1.2;
 }

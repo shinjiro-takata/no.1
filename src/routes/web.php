@@ -17,6 +17,8 @@ use App\Http\Controllers\ContactController;
 Route::get('/', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/confirm', [ContactController::class, 'confirm'])->name('contact.confirm');
 Route::post('/thanks', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/admin', [ContactController::class, 'admin'])->name('contact.admin');
 
 Route::view('/register', 'register')->name('register');
 Route::view('/login', 'login')->name('login');
+Route::view('/logout', 'logout')->name('logout');
