@@ -13,31 +13,30 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 
+// Fortifyの画面設定とログイン制限をまとめる
 class FortifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-    Fortify::createUsersUsing(CreateNewUser::class);
+        // 会員登録時に使う処理クラスを指定する
+        Fortify::createUsersUsing(CreateNewUser::class);
 
+        // 登録画面に使うBladeを指定する
         Fortify::registerView(function () {
             return view('register');
         });
 
+        // ログイン画面に使うBladeを指定する
         Fortify::loginView(function () {
             return view('login');
         });
 
+        // 同じメールアドレスとIPからのログイン試行回数を制限する
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
 

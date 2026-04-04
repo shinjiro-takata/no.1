@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="register">
-    <div class="register__heading">
+    <div class="page__heading">
         <h2>Register</h2>
     </div>
 

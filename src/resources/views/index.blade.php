@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="contact-form__content">
-    <div class="contact-form__heading">
+    <div class="page__heading">
         <h2>Contact</h2>
     </div>
     <form class="form" action="{{ route('contact.confirm') }}" method="post" novalidate>
@@ -42,24 +42,14 @@
             </div>
             <div class="form__group-content">
                 <div class="form__input--text">
+                    @foreach (\App\Models\Contact::GENDER_LABELS as $value => $label)
                     <div class="form__input--text-gender">
                         <label>
-                            <input type="radio" name="gender" value="1" {{ old('gender') === '1' ? 'checked' : '' }} />
-                            男性
+                            <input type="radio" name="gender" value="{{ $value }}" {{ old('gender') == (string) $value ? 'checked' : '' }} />
+                            {{ $label }}
                         </label>
                     </div>
-                    <div class="form__input--text-gender">
-                        <label>
-                            <input type="radio" name="gender" value="2" {{ old('gender') === '2' ? 'checked' : '' }} />
-                            女性
-                        </label>
-                    </div>
-                    <div class="form__input--text-gender">
-                        <label>
-                            <input type="radio" name="gender" value="3" {{ old('gender') === '3' ? 'checked' : '' }} />
-                            その他
-                        </label>
-                    </div>
+                    @endforeach
                 </div>
                 <div class="form__error">
                     @error('gender')
@@ -177,7 +167,7 @@
             </div>
             <div class="form__group-content">
                 <div class="form__input--textarea">
-                    <textarea name="detail" placeholder="お問い合わせ内容をご記載ください">{{ old('detail') }}</textarea>
+                    <textarea class="form__input--textarea-field" name="detail" placeholder="お問い合わせ内容をご記載ください">{{ old('detail') }}</textarea>
                 </div>
                 <div class="form__error">
                     @error('detail')

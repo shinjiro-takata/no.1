@@ -1,7 +1,6 @@
 .header {
     background-color: #fff;
     border-bottom: 1px solid #f1f1f1;
-    
 }
 
 .header__inner {
@@ -10,17 +9,15 @@
     padding: 20px 10px;
     display: flex;
     align-items: center;
+    justify-content: center;
     position: relative;
 }
 
 .header__logo {
-    width: 100%;
     font-size: 1.5rem;
     font-weight: bold;
     color: #8b7969;
     text-decoration: none;
-    text-align: center;
-    align-items: center;
     font-family: "AppleMyungjo", sans-serif;
 }
 
@@ -48,9 +45,12 @@
     cursor: pointer;
 }
 
-.header__action-link:visited,
-.auth-header__action-link:visited {
-    color: #d6c0b2;
+.page__heading {
+    text-align: center;
+    color: #8b7969;
+    font-family: "AppleMyungjo", sans-serif;
+    font-size: 24px;
+    margin-bottom: 32px;
 }
 
 .header__logout-form {

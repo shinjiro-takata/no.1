@@ -4,25 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use App\Models\Category;
+use App\Exports\ContactsExport;
 use App\Http\Requests\ContactRequest;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ContactController extends Controller
 {
-    // 管理ページ
-    public function admin(Request $request)
+    // キーワード・性別・カテゴリ・日付の検索条件をクエリに適用する
+    private function applyFilters(Request $request, $query)
     {
-        $categories = Category::all();
-
-        $query = Contact::with('category')->latest('id');
-
         if ($request->filled('keyword')) {
             $keyword = $request->input('keyword');
-            $query->where(function ($q) use ($keyword) {
+            $fullNameKeyword = preg_replace('/[\s ]+/u', '', $keyword); // スペースを除去してフルネーム検索に対応
+
+            $query->where(function ($q) use ($keyword, $fullNameKeyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
                     ->orWhere('last_name', 'like', "%{$keyword}%")
                     ->orWhere('email', 'like', "%{$keyword}%");
+
+                if ($fullNameKeyword !== '') {
+                    $q->orWhereRaw("CONCAT(last_name, first_name) like ?", ["%{$fullNameKeyword}%"]); // 姓名を結合したフルネームでも検索
+                }
             });
         }
 
@@ -35,99 +38,82 @@ class ContactController extends Controller
         }
 
         if ($request->filled('created_date')) {
-            $query->whereDate('created_at', $request->input('created_date'));
+            $query->whereDate('created_at', $request->input('created_date')); // 時刻を無視して日付だけ比較
         }
 
-        $contacts = $query->paginate(7)->appends($request->query());
-
-        return view('admin', compact('contacts', 'categories'));
+        return $query;
     }
 
-    // 検索
+    // 管理ページ：問い合わせ一覧を表示する
+    public function admin(Request $request)
+    {
+        $categories = Category::all();
+        $modalContact = null;
+
+        $query = Contact::with('category')->latest('id');
+        $query = $this->applyFilters($request, $query);
+        $contacts = $query->paginate(Contact::PER_PAGE)->appends($request->query()); // ページネーション（クエリパラメータを引き継ぐ）
+
+        if ($request->filled('modal')) {
+            $modalContact = Contact::with('category')->find($request->input('modal')); // モーダルに表示するレコードを取得
+        }
+
+        return view('admin', compact('contacts', 'categories', 'modalContact'));
+    }
+
+    // 検索：adminに処理を委譲する
     public function search(Request $request)
     {
         return $this->admin($request);
     }
 
-    // 検索リセット
+    // 検索リセット：クエリパラメータなしで管理ページへ戻る
     public function reset()
     {
         return redirect()->route('contact.admin');
     }
 
-    // 削除
+    // 削除：レコードを削除して前のページへ戻る
     public function delete(Contact $contact)
     {
         $contact->delete();
-        return redirect()->route('contact.admin');
+        return redirect()->back();
     }
 
-    // エクスポート
-    public function export(): StreamedResponse
+    // エクスポート：現在の検索条件でCSVをダウンロードする
+    public function export(Request $request)
     {
-        $contacts = Contact::with('category')->latest('id')->get();
+        $query = Contact::with('category')->latest('id');
+        $query = $this->applyFilters($request, $query);
 
-        $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="contacts.csv"',
-        ];
-
-        $callback = function () use ($contacts) {
-            $stream = fopen('php://output', 'w');
-            // BOM (Excel対策)
-            fwrite($stream, "\xEF\xBB\xBF");
-            // ヘッダー行
-            fputcsv($stream, ['お名前', '性別', 'メールアドレス', 'お問い合わせの種類', 'お問い合わせ内容', '登録日時']);
-
-            $genderMap = [1 => '男性', 2 => '女性', 3 => 'その他'];
-
-            foreach ($contacts as $contact) {
-                fputcsv($stream, [
-                    $contact->last_name . ' ' . $contact->first_name,
-                    $genderMap[$contact->gender] ?? '',
-                    $contact->email,
-                    optional($contact->category)->content,
-                    $contact->detail,
-                    $contact->created_at,
-                ]);
-            }
-
-            fclose($stream);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return Excel::download(new ContactsExport($query), 'contacts.csv', \Maatwebsite\Excel\Excel::CSV);
     }
 
-    // 入力ページ
+    // 入力ページ：問い合わせフォームを表示する
     public function index()
     {
         $categories = Category::all();
         return view('index', compact('categories'));
     }
 
-    // 確認ページ
+    // 確認ページ：バリデーション後に入力内容を確認画面へ渡す
     public function confirm(ContactRequest $request)
     {
         $contact = $request->all();
-
-        // 3つの入力値をハイフンで繋いで1つの文字列にする
-        $contact['tel_full'] = $request->tel1 . $request->tel2 . $request->tel3;
-
-        // カテゴリー名を表示するために取得
-        $categoryContent = Category::find($request->category_id)->content;
+        $contact['tel_full'] = $request->tel1 . $request->tel2 . $request->tel3; // 3つの入力値を連結
+        $categoryContent = Category::find($request->category_id)->content; // カテゴリ名を取得
         return view('confirm', compact('contact', 'categoryContent'));
     }
 
-    // 保存処理（サンクスページへ）
+    // 保存処理：DBに保存してサンクスページを表示する
     public function store(Request $request)
     {
-        // 「修正する」ボタンが押された場合
         if ($request->input('back')) {
-            return redirect()->route('contact.index')->withInput($request->except('back'));
+            return redirect()->route('contact.index')->withInput($request->except('back')); // 「修正する」で入力ページへ戻る
         }
 
         $data = $request->all();
-        $data['tel'] = $request->tel1 . $request->tel2 . $request->tel3;
+        $data['tel'] = $request->tel1 . $request->tel2 . $request->tel3; // 3つの入力値を連結
 
         Contact::create($data);
         return view('thanks');

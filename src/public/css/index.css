@@ -4,15 +4,6 @@
     padding: 50px 80px 40px;
 }
 
-.contact-form__heading {
-    width: 100%;
-    color: #8b7969;
-    text-align: center;
-    font-family: "AppleMyungjo", sans-serif;
-    font-size: 22px;
-    margin-bottom: 50px;
-}
-
 .form__group {
     margin-bottom: 26px;
     display: flex;
@@ -64,6 +55,12 @@
     border: 1px solid #ddd;
     border-radius: 3px;
     background-color: #f4f4f4;
+}
+
+.form__error {
+    margin-top: 6px;
+    color: #ff6b6b;
+    font-size: 14px;
 }
 
 .form__error--name {
@@ -177,7 +174,7 @@
     background-repeat: no-repeat;
 }
 
-.form__input--textarea textarea {
+.form__input--textarea-field {
     width: 100%;
     min-height: 130px;
     padding: 14px;
@@ -200,10 +197,4 @@
     font-size: 22px;
     background-color: #8b7969;
     cursor: pointer;
-}
-
-.form__error {
-    margin-top: 6px;
-    color: #ff6b6b;
-    font-size: 14px;
 }

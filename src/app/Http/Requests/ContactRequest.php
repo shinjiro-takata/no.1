@@ -2,31 +2,26 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Contact;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
+// お問い合わせフォーム専用のバリデーションをまとめる
 class ContactRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+    // 今回は誰でも送信できるため常に許可する
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+    // 入力項目ごとのバリデーションルール
     public function rules()
     {
         return [
             'first_name'  => ['required', 'string', 'max:8'],
             'last_name'   => ['required', 'string', 'max:8'],
-            'gender'      => ['required', 'integer', 'in:1,2,3'], // 1:男性 2:女性 3:その他
+            'gender'      => ['required', 'integer', Rule::in(array_keys(Contact::GENDER_LABELS))],
             'email'       => ['required', 'email'],
             'tel1'        => ['required', 'numeric', 'digits_between:1,5'],
             'tel2'        => ['required', 'numeric', 'digits_between:1,5'],
@@ -38,6 +33,7 @@ class ContactRequest extends FormRequest
         ];
     }
 
+    // バリデーションエラーメッセージ
     public function messages()
     {
         return [
