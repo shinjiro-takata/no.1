@@ -6,7 +6,9 @@ no.1
 
 git clone git@github.com:shinjiro-takata/no.1.git  
 docker-compose up -d --build  
+cp src/.env.example src/.env  
 docker-compose exec php composer install  
+docker-compose exec php php artisan key:generate  
 docker-compose exec php php artisan migrate --seed
 
 ※ `composer install` と `php artisan` は、ホストではなく `php` コンテナ内で実行してください。
