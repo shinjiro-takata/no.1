@@ -28,7 +28,7 @@
                 @endforeach
             </select>
 
-            <select class="search-form__input search-form__input--select-wide" name="category_id">
+            <select class="search-form__input search-form__input--select search-form__input--select-wide" name="category_id">
                 <option value="">お問い合わせの種類</option>
                 @foreach ($categories as $category)
                 <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->content }}</option>

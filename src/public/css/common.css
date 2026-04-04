@@ -29,7 +29,7 @@
 }
 
 .header__action-link,
-.auth-header__action-link {
+.header__action-link--auth {
     display: inline-flex;
     align-items: center;
     justify-content: center;
