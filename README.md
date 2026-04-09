@@ -27,7 +27,7 @@ maatwebsite/excel
 
 ## ER図
 
-<img width="691" height="681" alt="ER drawio" src="https://github.com/user-attachments/assets/7da04b7d-3ee5-42b4-b774-85ca26928f61" />
+![alt text](ER.drawio.png)
 
 ## URL
 
